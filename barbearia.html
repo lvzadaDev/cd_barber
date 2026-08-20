@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Barbearia Corte & Navalha</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Work+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#18100e;
+    --panel:#241a16;
+    --panel-2:#2c211c;
+    --paper:#efe6d6;
+    --paper-dim:#c9bda7;
+    --brass:#c79a4b;
+    --brass-dim:#9c7936;
+    --red:#8c2f39;
+    --blue:#2e4a5c;
+    --line: rgba(239,230,214,0.14);
+    --radius: 2px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--ink);
+    color:var(--paper);
+    font-family:'Work Sans', sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{
+    font-family:'Bebas Neue', sans-serif;
+    letter-spacing:0.04em;
+    font-weight:400;
+    line-height:0.95;
+    color:var(--paper);
+  }
+  .mono{ font-family:'Space Mono', monospace; }
+  a{ color:inherit; }
+  img{ max-width:100%; display:block; }
+  button{ font-family:inherit; cursor:pointer; }
+  .wrap{ max-width:1080px; margin:0 auto; padding:0 24px; }
+
+  /* ---------- Barber pole signature element ---------- */
+  .pole{
+    height:10px;
+    width:100%;
+    background: repeating-linear-gradient(
+      -45deg,
+      var(--red) 0 18px,
+      var(--paper) 18px 36px,
+      var(--blue) 36px 54px,
+      var(--paper) 54px 72px
+    );
+    background-size: 102px 100%;
+    animation: pole-move 3.2s linear infinite;
+  }
+  @keyframes pole-move{
+    from{ background-position: 0 0; }
+    to{ background-position: 102px 0; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .pole{ animation:none; }
+  }
+
+  /* ---------- Header ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background: rgba(24,16,14,0.92);
+    backdrop-filter: blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 24px;
+    max-width:1080px; margin:0 auto;
+  }
+  .brand{ display:flex; align-items:center; gap:12px; }
+  .brand-mark{
+    width:38px; height:38px; border-radius:50%;
+    border:2px solid var(--brass);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Bebas Neue',sans-serif; font-size:18px; color:var(--brass);
+  }
+  .brand-name{ font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:0.06em; }
+  .brand-sub{ font-size:10px; color:var(--paper-dim); letter-spacing:0.18em; text-transform:uppercase; margin-top:-2px; }
+  nav.links{ display:flex; gap:28px; font-size:14px; }
+  nav.links a{ text-decoration:none; color:var(--paper-dim); transition:color .2s; }
+  nav.links a:hover{ color:var(--brass); }
+  .btn{
+    display:inline-block;
+    border:1px solid var(--brass);
+    color:var(--brass);
+    background:transparent;
+    padding:11px 22px;
+    font-size:13px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    text-decoration:none;
+    transition: all .2s;
+  }
+  .btn:hover{ background:var(--brass); color:var(--ink); }
+  .btn-solid{ background:var(--brass); color:var(--ink); border-color:var(--brass); }
+  .btn-solid:hover{ background:var(--brass-dim); border-color:var(--brass-dim); }
+  .btn:disabled{ opacity:0.35; cursor:not-allowed; }
+  .btn:disabled:hover{ background:transparent; color:var(--brass); }
+  .btn-solid:disabled:hover{ background:var(--brass); }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    position:relative;
+    padding:110px 24px 90px;
+    overflow:hidden;
+    background:
+      radial-gradient(ellipse at 75% 20%, rgba(199,154,75,0.10), transparent 55%),
+      var(--ink);
+  }
+  .hero-inner{ max-width:1080px; margin:0 auto; display:grid; grid-template-columns:1.3fr 0.9fr; gap:48px; align-items:center; }
+  .eyebrow{
+    display:flex; align-items:center; gap:10px;
+    font-size:12px; letter-spacing:0.22em; text-transform:uppercase; color:var(--brass);
+    margin-bottom:22px;
+  }
+  .eyebrow::before{ content:""; width:26px; height:1px; background:var(--brass); display:block; }
+  .hero h1{ font-size:clamp(52px, 8vw, 96px); }
+  .hero h1 span{ color:var(--brass); }
+  .hero p.lead{ margin-top:24px; max-width:440px; color:var(--paper-dim); font-size:17px; }
+  .hero-cta{ margin-top:38px; display:flex; gap:16px; flex-wrap:wrap; }
+
+  .hero-pole-frame{
+    justify-self:end;
+    display:flex; flex-direction:column; align-items:center; gap:18px;
+  }
+  .pole-vertical{
+    width:34px; height:280px; border-radius:17px; overflow:hidden;
+    border:3px solid var(--panel-2);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    position:relative;
+  }
+  .pole-vertical::before{
+    content:"";
+    position:absolute; inset:0;
+    background: repeating-linear-gradient(
+      -45deg,
+      var(--red) 0 16px,
+      var(--paper) 16px 32px,
+      var(--blue) 32px 48px,
+      var(--paper) 48px 64px
+    );
+    background-size: 100% 90px;
+    animation: pole-vert 2.4s linear infinite;
+  }
+  @keyframes pole-vert{ from{background-position:0 0;} to{background-position:0 90px;} }
+  .pole-cap{ width:44px; height:14px; background:var(--brass); border-radius:3px; }
+  .hero-tag{ font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:var(--paper-dim); text-align:center; }
+
+  @media (max-width: 820px){
+    .hero-inner{ grid-template-columns:1fr; }
+    .hero-pole-frame{ justify-self:start; flex-direction:row; }
+    .pole-vertical{ height:140px; width:26px; }
+  }
+
+  /* ---------- Section shell ---------- */
+  section{ padding:90px 24px; }
+  .section-head{ margin-bottom:48px; }
+  .section-head .eyebrow{ margin-bottom:14px; }
+  .section-head h2{ font-size:clamp(36px,5vw,54px); }
+  .section-head p{ color:var(--paper-dim); max-width:520px; margin-top:14px; }
+
+  /* ---------- Services (price board / ticket style) ---------- */
+  .services{ background:var(--panel); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+  .service-list{ display:flex; flex-direction:column; }
+  .service-row{
+    display:grid;
+    grid-template-columns: 90px 1fr auto auto;
+    align-items:center;
+    gap:20px;
+    padding:22px 0;
+    border-bottom:1px dashed var(--line);
+  }
+  .service-row:first-child{ border-top:1px dashed var(--line); }
+  .service-num{ font-family:'Space Mono',monospace; color:var(--brass-dim); font-size:13px; }
+  .service-name{ font-size:22px; font-family:'Bebas Neue',sans-serif; letter-spacing:0.03em; }
+  .service-desc{ color:var(--paper-dim); font-size:13px; margin-top:4px; }
+  .service-time{ font-family:'Space Mono',monospace; font-size:13px; color:var(--paper-dim); white-space:nowrap; }
+  .service-price{ font-family:'Space Mono',monospace; font-size:20px; color:var(--brass); white-space:nowrap; }
+  @media (max-width:640px){
+    .service-row{ grid-template-columns: 1fr auto; }
+    .service-num, .service-time{ display:none; }
+  }
+
+  /* ---------- Barbers ---------- */
+  .barbers-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:28px; }
+  .barber-card{ border:1px solid var(--line); padding:26px; }
+  .barber-avatar{
+    width:56px;height:56px;border-radius:50%;
+    background:var(--panel-2); border:1px solid var(--brass);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Bebas Neue',sans-serif; color:var(--brass); font-size:20px;
+    margin-bottom:16px;
+  }
+  .barber-card h3{ font-size:24px; }
+  .barber-role{ font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--brass); margin:6px 0 12px; }
+  .barber-desc{ font-size:14px; color:var(--paper-dim); }
+
+  /* ---------- Booking ---------- */
+  .booking{ background:var(--panel); border-top:1px solid var(--line); }
+  .steps-track{ display:flex; gap:6px; margin-bottom:40px; }
+  .step-dot{ flex:1; height:3px; background:var(--line); }
+  .step-dot.active{ background:var(--brass); }
+  .step-labels{ display:flex; justify-content:space-between; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--paper-dim); margin-bottom:8px; }
+  .step-labels span.on{ color:var(--brass); }
+
+  .booking-card{ border:1px solid var(--line); background:var(--ink); padding:36px; }
+  .booking-title{ font-size:26px; margin-bottom:6px; }
+  .booking-sub{ font-size:13px; color:var(--paper-dim); margin-bottom:28px; }
+
+  .pick-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:14px; }
+  .pick-card{
+    border:1px solid var(--line); background:var(--panel);
+    padding:18px; text-align:left; color:var(--paper);
+    transition: border-color .15s, background .15s;
+  }
+  .pick-card:hover{ border-color:var(--brass-dim); }
+  .pick-card.selected{ border-color:var(--brass); background:var(--panel-2); }
+  .pick-card .pc-title{ font-family:'Bebas Neue',sans-serif; font-size:19px; letter-spacing:0.03em; }
+  .pick-card .pc-meta{ font-size:12px; color:var(--paper-dim); margin-top:4px; font-family:'Space Mono',monospace; }
+
+  .cal-header{ display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
+  .cal-month{ font-family:'Bebas Neue',sans-serif; font-size:20px; letter-spacing:0.05em; }
+  .cal-nav{ display:flex; gap:8px; }
+  .cal-nav button{ background:none; border:1px solid var(--line); color:var(--paper); width:32px; height:32px; font-size:14px; }
+  .cal-nav button:hover{ border-color:var(--brass); color:var(--brass); }
+  .cal-grid{ display:grid; grid-template-columns:repeat(7,1fr); gap:6px; }
+  .cal-dow{ text-align:center; font-size:10px; letter-spacing:0.1em; color:var(--paper-dim); text-transform:uppercase; padding-bottom:6px; }
+  .cal-day{
+    aspect-ratio:1; display:flex; align-items:center; justify-content:center;
+    font-family:'Space Mono',monospace; font-size:13px;
+    border:1px solid transparent; background:var(--panel); color:var(--paper);
+  }
+  .cal-day.empty{ background:transparent; }
+  .cal-day.closed{ color:var(--paper-dim); opacity:0.3; }
+  .cal-day.past{ color:var(--paper-dim); opacity:0.2; }
+  .cal-day.avail{ cursor:pointer; }
+  .cal-day.avail:hover{ border-color:var(--brass-dim); }
+  .cal-day.selected{ background:var(--brass); color:var(--ink); font-weight:700; }
+
+  .slot-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(90px,1fr)); gap:10px; }
+  .slot-btn{
+    border:1px solid var(--line); background:var(--panel); color:var(--paper);
+    padding:12px 6px; font-family:'Space Mono',monospace; font-size:13px; text-align:center;
+  }
+  .slot-btn:hover:not(:disabled){ border-color:var(--brass); color:var(--brass); }
+  .slot-btn.selected{ background:var(--brass); color:var(--ink); border-color:var(--brass); }
+  .slot-btn:disabled{ opacity:0.25; text-decoration:line-through; cursor:not-allowed; }
+  .empty-note{ color:var(--paper-dim); font-size:13px; padding:20px 0; }
+
+  .form-grid{ display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  .field{ display:flex; flex-direction:column; gap:8px; }
+  .field label{ font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--paper-dim); }
+  .field input{
+    background:var(--panel); border:1px solid var(--line); color:var(--paper);
+    padding:13px 14px; font-family:'Work Sans',sans-serif; font-size:14px;
+  }
+  .field input:focus{ outline:none; border-color:var(--brass); }
+  @media (max-width:600px){ .form-grid{ grid-template-columns:1fr; } }
+
+  .summary-box{ border:1px dashed var(--line); padding:20px; margin-bottom:24px; font-size:14px; }
+  .summary-box .row{ display:flex; justify-content:space-between; padding:6px 0; color:var(--paper-dim); }
+  .summary-box .row b{ color:var(--paper); font-weight:500; }
+
+  .booking-actions{ display:flex; justify-content:space-between; align-items:center; margin-top:30px; }
+  .back-link{ background:none; border:none; color:var(--paper-dim); font-size:13px; text-decoration:underline; }
+  .back-link:hover{ color:var(--brass); }
+
+  .confirm-stamp{ text-align:center; padding:20px 0 8px; }
+  .confirm-stamp .ring{
+    width:84px; height:84px; border-radius:50%; border:3px solid var(--brass);
+    display:flex; align-items:center; justify-content:center; margin:0 auto 20px;
+    font-family:'Bebas Neue',sans-serif; font-size:34px; color:var(--brass);
+  }
+  .confirm-stamp h3{ font-size:30px; }
+  .confirm-stamp p{ color:var(--paper-dim); margin-top:10px; font-size:14px; }
+
+  /* ---------- Footer ---------- */
+  footer{ padding:60px 24px 40px; border-top:1px solid var(--line); }
+  .footer-grid{ display:grid; grid-template-columns:1.2fr 1fr 1fr; gap:40px; max-width:1080px; margin:0 auto; }
+  .footer-grid h4{ font-size:12px; letter-spacing:0.14em; text-transform:uppercase; color:var(--brass); margin-bottom:14px; }
+  .footer-grid p, .footer-grid li{ color:var(--paper-dim); font-size:14px; }
+  .footer-grid ul{ list-style:none; display:flex; flex-direction:column; gap:8px; }
+  .foot-bottom{ text-align:center; margin-top:50px; font-size:12px; color:var(--paper-dim); }
+  @media (max-width:700px){ .footer-grid{ grid-template-columns:1fr; } }
+
+  .hide{ display:none !important; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <div class="brand">
+      <div class="brand-mark">CN</div>
+      <div>
+        <div class="brand-name">CORTE &amp; NAVALHA</div>
+        <div class="brand-sub">Barbearia desde 1998</div>
+      </div>
+    </div>
+    <nav class="links">
+      <a href="#servicos">Serviços</a>
+      <a href="#equipe">Equipe</a>
+      <a href="#agendar">Agendar</a>
+    </nav>
+    <a href="#agendar" class="btn">Agendar horário</a>
+  </div>
+  <div class="pole"></div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div>
+        <div class="eyebrow">Rua das Tesouras, 128 · Belo Horizonte</div>
+        <h1>NAVALHA<br>AFIADA,<br><span>ESTILO</span> NA HORA.</h1>
+        <p class="lead">Corte, barba e bigode feitos como manda a tradição — sem pressa, sem fila. Escolha o barbeiro, o dia e o horário, tudo em menos de um minuto.</p>
+        <div class="hero-cta">
+          <a href="#agendar" class="btn btn-solid">Agendar horário</a>
+          <a href="#servicos" class="btn">Ver serviços</a>
+        </div>
+      </div>
+      <div class="hero-pole-frame">
+        <div class="pole-cap"></div>
+        <div class="pole-vertical"></div>
+        <div class="pole-cap"></div>
+        <div class="hero-tag">Ter–Sáb · 09h–19h</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="services" id="servicos">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">Cardápio de serviços</div>
+        <h2>O que fazemos aqui</h2>
+        <p>Preços fixos, sem surpresa. O tempo é uma estimativa — bom barbeiro não corre.</p>
+      </div>
+      <div class="service-list" id="serviceList"></div>
+    </div>
+  </section>
+
+  <!-- BARBERS -->
+  <section id="equipe">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">Quem segura a navalha</div>
+        <h2>A equipe</h2>
+        <p>Dois barbeiros, dois estilos. Escolha o seu na hora de agendar.</p>
+      </div>
+      <div class="barbers-grid" id="barberGrid"></div>
+    </div>
+  </section>
+
+  <!-- BOOKING -->
+  <section class="booking" id="agendar">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">Reserva em 4 passos</div>
+        <h2>Agende seu horário</h2>
+        <p>Escolha o serviço, o barbeiro, o dia e o horário. Sua reserva fica guardada — sem overbooking.</p>
+      </div>
+
+      <div class="step-labels">
+        <span id="lbl1">1. Serviço</span>
+        <span id="lbl2">2. Barbeiro</span>
+        <span id="lbl3">3. Dia &amp; hora</span>
+        <span id="lbl4">4. Seus dados</span>
+      </div>
+      <div class="steps-track">
+        <div class="step-dot" id="dot1"></div>
+        <div class="step-dot" id="dot2"></div>
+        <div class="step-dot" id="dot3"></div>
+        <div class="step-dot" id="dot4"></div>
+      </div>
+
+      <div class="booking-card">
+
+        <!-- STEP 1: SERVICE -->
+        <div id="step1">
+          <div class="booking-title">Qual serviço você quer?</div>
+          <div class="booking-sub">Selecione uma opção para continuar.</div>
+          <div class="pick-grid" id="serviceGrid"></div>
+          <div class="booking-actions">
+            <span></span>
+            <button class="btn btn-solid" id="toStep2" disabled>Continuar</button>
+          </div>
+        </div>
+
+        <!-- STEP 2: BARBER -->
+        <div id="step2" class="hide">
+          <div class="booking-title">Com qual barbeiro?</div>
+          <div class="booking-sub">A disponibilidade muda conforme o profissional.</div>
+          <div class="pick-grid" id="barberPickGrid"></div>
+          <div class="booking-actions">
+            <button class="back-link" id="toStep1">&larr; Voltar</button>
+            <button class="btn btn-solid" id="toStep3" disabled>Continuar</button>
+          </div>
+        </div>
+
+        <!-- STEP 3: DATE & TIME -->
+        <div id="step3" class="hide">
+          <div class="booking-title">Escolha o dia e o horário</div>
+          <div class="booking-sub">Fechamos aos domingos e segundas. Horários já reservados aparecem riscados.</div>
+
+          <div class="cal-header">
+            <div class="cal-month" id="calMonth"></div>
+            <div class="cal-nav">
+              <button id="calPrev">&larr;</button>
+              <button id="calNext">&rarr;</button>
+            </div>
+          </div>
+          <div class="cal-grid" id="calGrid"></div>
+
+          <div style="height:30px"></div>
+          <div id="slotArea">
+            <div class="empty-note">Escolha um dia disponível acima para ver os horários.</div>
+          </div>
+
+          <div class="booking-actions">
+            <button class="back-link" id="toStep2b">&larr; Voltar</button>
+            <button class="btn btn-solid" id="toStep4" disabled>Continuar</button>
+          </div>
+        </div>
+
+        <!-- STEP 4: DETAILS + CONFIRM -->
+        <div id="step4" class="hide">
+          <div class="booking-title">Confirme sua reserva</div>
+          <div class="booking-sub">Preencha seus dados para garantir o horário.</div>
+
+          <div class="summary-box" id="summaryBox"></div>
+
+          <div class="form-grid">
+            <div class="field">
+              <label for="custName">Nome completo</label>
+              <input type="text" id="custName" placeholder="Seu nome">
+            </div>
+            <div class="field">
+              <label for="custPhone">Telefone / WhatsApp</label>
+              <input type="tel" id="custPhone" placeholder="(31) 99999-0000">
+            </div>
+          </div>
+
+          <div class="booking-actions">
+            <button class="back-link" id="toStep3b">&larr; Voltar</button>
+            <button class="btn btn-solid" id="confirmBooking">Confirmar agendamento</button>
+          </div>
+        </div>
+
+        <!-- STEP 5: SUCCESS -->
+        <div id="step5" class="hide">
+          <div class="confirm-stamp">
+            <div class="ring">OK</div>
+            <h3>Reserva confirmada!</h3>
+            <p id="confirmText"></p>
+          </div>
+          <div class="booking-actions" style="justify-content:center; margin-top:20px;">
+            <button class="btn" id="newBooking">Fazer outro agendamento</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-grid">
+    <div>
+      <h4>Corte &amp; Navalha</h4>
+      <p>Rua das Tesouras, 128 — Centro<br>Belo Horizonte, MG</p>
+    </div>
+    <div>
+      <h4>Horário</h4>
+      <ul>
+        <li>Terça a sexta — 09h às 19h</li>
+        <li>Sábado — 09h às 17h</li>
+        <li>Domingo e segunda — fechado</li>
+      </ul>
+    </div>
+    <div>
+      <h4>Contato</h4>
+      <ul>
+        <li>(31) 3222-0198</li>
+        <li>contato@cortenavalha.com.br</li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bottom">© 2026 Barbearia Corte &amp; Navalha.</div>
+</footer>
+
+<script>
+(function(){
+
+  // ---------------- DATA ----------------
+  const SERVICES = [
+    { id:'corte', name:'Corte Masculino', desc:'Tesoura e máquina, acabamento na navalha.', duration:40, price:45 },
+    { id:'barba', name:'Barba', desc:'Toalha quente, navalha e óleo pós-barba.', duration:30, price:35 },
+    { id:'combo', name:'Corte + Barba', desc:'O pacote completo, sem pressa.', duration:60, price:70 },
+    { id:'sobrancelha', name:'Sobrancelha', desc:'Alinhamento na navalha.', duration:15, price:15 },
+    { id:'infantil', name:'Corte Infantil', desc:'Até 12 anos, com paciência.', duration:30, price:35 },
+  ];
+
+  const BARBERS = [
+    { id:'rafael', name:'Rafael Souza', role:'Barbeiro-chefe', desc:'22 anos de navalha. Especialista em barba e acabamento clássico.', initials:'RS' },
+    { id:'diego', name:'Diego Alves', role:'Barbeiro', desc:'Cortes modernos, degradês e desenhos.', initials:'DA' },
+  ];
+
+  const OPEN_DAYS = { 2:true, 3:true, 4:true, 5:true, 6:true }; // tue-sat (0=sun,1=mon closed)
+  const DAY_HOURS = {
+    default: { start: 9*60, end: 19*60 },
+    6: { start: 9*60, end: 17*60 } // saturday closes earlier
+  };
+  const SLOT_STEP = 30; // minutes
+
+  const STORAGE_KEY = 'bookings';
+
+  // ---------------- STATE ----------------
+  const state = {
+    service: null,
+    barber: null,
+    date: null,      // 'YYYY-MM-DD'
+    time: null,       // minutes from midnight
+    calMonthOffset: 0,
+    step: 1,
+  };
+
+  // ---------------- RENDER: services & barbers (display) ----------------
+  const money = n => n.toLocaleString('pt-BR', { style:'currency', currency:'BRL' });
+
+  function renderServiceList(){
+    const el = document.getElementById('serviceList');
+    el.innerHTML = SERVICES.map((s,i)=>`
+      <div class="service-row">
+        <div class="service-num">0${i+1}</div>
+        <div>
+          <div class="service-name">${s.name}</div>
+          <div class="service-desc">${s.desc}</div>
+        </div>
+        <div class="service-time">${s.duration} min</div>
+        <div class="service-price">${money(s.price)}</div>
+      </div>
+    `).join('');
+  }
+
+  function renderBarberGrid(){
+    const el = document.getElementById('barberGrid');
+    el.innerHTML = BARBERS.map(b=>`
+      <div class="barber-card">
+        <div class="barber-avatar">${b.initials}</div>
+        <h3>${b.name}</h3>
+        <div class="barber-role">${b.role}</div>
+        <div class="barber-desc">${b.desc}</div>
+      </div>
+    `).join('');
+  }
+
+  // ---------------- STEP NAV ----------------
+  function goToStep(n){
+    state.step = n;
+    for(let i=1;i<=5;i++){
+      document.getElementById('step'+i).classList.toggle('hide', i!==n);
+    }
+    for(let i=1;i<=4;i++){
+      const dot = document.getElementById('dot'+i);
+      const lbl = document.getElementById('lbl'+i);
+      if(dot) dot.classList.toggle('active', i<=n);
+      if(lbl) lbl.classList.toggle('on', i<=n);
+    }
+    document.querySelector('.booking-card').scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  // ---------------- STEP 1: SERVICE PICK ----------------
+  function renderServicePick(){
+    const el = document.getElementById('serviceGrid');
+    el.innerHTML = SERVICES.map(s=>`
+      <button class="pick-card" data-id="${s.id}">
+        <div class="pc-title">${s.name}</div>
+        <div class="pc-meta">${s.duration} min · ${money(s.price)}</div>
+      </button>
+    `).join('');
+    el.querySelectorAll('.pick-card').forEach(card=>{
+      card.addEventListener('click', ()=>{
+        state.service = SERVICES.find(s=>s.id===card.dataset.id);
+        el.querySelectorAll('.pick-card').forEach(c=>c.classList.remove('selected'));
+        card.classList.add('selected');
+        document.getElementById('toStep2').disabled = false;
+        // reset downstream selections since duration may change availability
+        state.date = null; state.time = null;
+      });
+    });
+  }
+
+  // ---------------- STEP 2: BARBER PICK ----------------
+  function renderBarberPick(){
+    const el = document.getElementById('barberPickGrid');
+    el.innerHTML = BARBERS.map(b=>`
+      <button class="pick-card" data-id="${b.id}">
+        <div class="pc-title">${b.name}</div>
+        <div class="pc-meta">${b.role}</div>
+      </button>
+    `).join('');
+    el.querySelectorAll('.pick-card').forEach(card=>{
+      card.addEventListener('click', ()=>{
+        state.barber = BARBERS.find(b=>b.id===card.dataset.id);
+        el.querySelectorAll('.pick-card').forEach(c=>c.classList.remove('selected'));
+        card.classList.add('selected');
+        document.getElementById('toStep3').disabled = false;
+        state.date = null; state.time = null;
+      });
+    });
+  }
+
+  // ---------------- STEP 3: CALENDAR ----------------
+  const DOW_LABELS = ['D','S','T','Q','Q','S','S'];
+  const MONTH_LABELS = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+
+  function fmtDateKey(d){
+    return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  }
+
+  function renderCalendar(){
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    const base = new Date(today.getFullYear(), today.getMonth()+state.calMonthOffset, 1);
+    document.getElementById('calMonth').textContent = MONTH_LABELS[base.getMonth()] + ' ' + base.getFullYear();
+
+    const grid = document.getElementById('calGrid');
+    grid.innerHTML = '';
+    DOW_LABELS.forEach(l=>{
+      const d = document.createElement('div');
+      d.className='cal-dow'; d.textContent=l;
+      grid.appendChild(d);
+    });
+
+    const firstDow = base.getDay();
+    for(let i=0;i<firstDow;i++){
+      const empty = document.createElement('div');
+      empty.className='cal-day empty';
+      grid.appendChild(empty);
+    }
+
+    const daysInMonth = new Date(base.getFullYear(), base.getMonth()+1, 0).getDate();
+    for(let day=1; day<=daysInMonth; day++){
+      const d = new Date(base.getFullYear(), base.getMonth(), day);
+      const cell = document.createElement('div');
+      cell.textContent = day;
+      const dow = d.getDay();
+      const key = fmtDateKey(d);
+      const isPast = d < today;
+      const isClosed = !OPEN_DAYS[dow];
+
+      cell.className = 'cal-day';
+      if(isPast){ cell.classList.add('past'); }
+      else if(isClosed){ cell.classList.add('closed'); }
+      else{
+        cell.classList.add('avail');
+        cell.addEventListener('click', ()=>{
+          state.date = key;
+          state.time = null;
+          grid.querySelectorAll('.cal-day').forEach(c=>c.classList.remove('selected'));
+          cell.classList.add('selected');
+          renderSlots();
+          document.getElementById('toStep4').disabled = true;
+        });
+      }
+      if(state.date === key) cell.classList.add('selected');
+      grid.appendChild(cell);
+    }
+
+    document.getElementById('calPrev').disabled = state.calMonthOffset<=0;
+  }
+
+  document.getElementById('calPrev').addEventListener('click', ()=>{
+    if(state.calMonthOffset>0){ state.calMonthOffset--; renderCalendar(); }
+  });
+  document.getElementById('calNext').addEventListener('click', ()=>{
+    if(state.calMonthOffset<11){ state.calMonthOffset++; renderCalendar(); }
+  });
+
+  // ---------------- SLOTS ----------------
+  async function getBookingsForBarberDate(barberId, dateKey){
+    try{
+      const res = await window.storage.get(STORAGE_KEY, true);
+      const all = res && res.value ? JSON.parse(res.value) : [];
+      return all.filter(b => b.barberId===barberId && b.date===dateKey);
+    }catch(e){
+      return [];
+    }
+  }
+
+  function minutesToLabel(m){
+    const h = Math.floor(m/60), mm = m%60;
+    return String(h).padStart(2,'0')+':'+String(mm).padStart(2,'0');
+  }
+
+  async function renderSlots(){
+    const area = document.getElementById('slotArea');
+    if(!state.date || !state.service || !state.barber){
+      area.innerHTML = '<div class="empty-note">Escolha um dia disponível acima para ver os horários.</div>';
+      return;
+    }
+    area.innerHTML = '<div class="empty-note">Carregando horários...</div>';
+
+    const d = new Date(state.date+'T00:00:00');
+    const dow = d.getDay();
+    const hours = DAY_HOURS[dow] || DAY_HOURS.default;
+    const duration = state.service.duration;
+
+    const existing = await getBookingsForBarberDate(state.barber.id, state.date);
+
+    const now = new Date();
+    const isToday = fmtDateKey(now) === state.date;
+    const nowMinutes = now.getHours()*60 + now.getMinutes();
+
+    const slots = [];
+    for(let t = hours.start; t + duration <= hours.end; t += SLOT_STEP){
+      let blocked = false;
+      if(isToday && t <= nowMinutes) blocked = true;
+      for(const b of existing){
+        const bs = b.time, be = b.time + b.duration;
+        if(t < be && bs < t + duration){ blocked = true; break; }
+      }
+      slots.push({ t, blocked });
+    }
+
+    if(slots.length===0){
+      area.innerHTML = '<div class="empty-note">Nenhum horário disponível neste dia para este serviço.</div>';
+      return;
+    }
+
+    area.innerHTML = '<div class="slot-grid">'+ slots.map(s=>`
+      <button class="slot-btn" data-t="${s.t}" ${s.blocked?'disabled':''}>${minutesToLabel(s.t)}</button>
+    `).join('') +'</div>';
+
+    area.querySelectorAll('.slot-btn:not(:disabled)').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        state.time = parseInt(btn.dataset.t,10);
+        area.querySelectorAll('.slot-btn').forEach(b=>b.classList.remove('selected'));
+        btn.classList.add('selected');
+        document.getElementById('toStep4').disabled = false;
+      });
+    });
+  }
+
+  // ---------------- STEP 4: SUMMARY + CONFIRM ----------------
+  function renderSummary(){
+    const box = document.getElementById('summaryBox');
+    const d = new Date(state.date+'T00:00:00');
+    const dateLabel = d.toLocaleDateString('pt-BR', { weekday:'long', day:'2-digit', month:'long' });
+    box.innerHTML = `
+      <div class="row"><span>Serviço</span><b>${state.service.name}</b></div>
+      <div class="row"><span>Barbeiro</span><b>${state.barber.name}</b></div>
+      <div class="row"><span>Data</span><b>${dateLabel}</b></div>
+      <div class="row"><span>Horário</span><b>${minutesToLabel(state.time)}</b></div>
+      <div class="row"><span>Duração</span><b>${state.service.duration} min</b></div>
+      <div class="row"><span>Valor</span><b>${money(state.service.price)}</b></div>
+    `;
+  }
+
+  async function confirmBooking(){
+    const nameInput = document.getElementById('custName');
+    const phoneInput = document.getElementById('custPhone');
+    const name = nameInput.value.trim();
+    const phone = phoneInput.value.trim();
+
+    if(!name || !phone){
+      nameInput.style.borderColor = name ? '' : 'var(--red)';
+      phoneInput.style.borderColor = phone ? '' : 'var(--red)';
+      return;
+    }
+
+    const btn = document.getElementById('confirmBooking');
+    btn.disabled = true;
+    btn.textContent = 'Confirmando...';
+
+    try{
+      // re-check availability right before saving to avoid race conditions
+      const existing = await getBookingsForBarberDate(state.barber.id, state.date);
+      const conflict = existing.some(b => state.time < b.time + b.duration && b.time < state.time + state.service.duration);
+      if(conflict){
+        alert('Ops! Esse horário acabou de ser reservado por outra pessoa. Escolha outro horário.');
+        btn.disabled = false;
+        btn.textContent = 'Confirmar agendamento';
+        goToStep(3);
+        renderSlots();
+        return;
+      }
+
+      const res = await window.storage.get(STORAGE_KEY, true).catch(()=>null);
+      const all = res && res.value ? JSON.parse(res.value) : [];
+      all.push({
+        id: 'bk_'+Date.now()+'_'+Math.random().toString(36).slice(2,7),
+        service: state.service.name,
+        duration: state.service.duration,
+        price: state.service.price,
+        barberId: state.barber.id,
+        barberName: state.barber.name,
+        date: state.date,
+        time: state.time,
+        name, phone,
+        createdAt: new Date().toISOString(),
+      });
+      await window.storage.set(STORAGE_KEY, JSON.stringify(all), true);
+
+      const d = new Date(state.date+'T00:00:00');
+      const dateLabel = d.toLocaleDateString('pt-BR', { weekday:'long', day:'2-digit', month:'long' });
+      document.getElementById('confirmText').textContent =
+        `${name}, seu horário com ${state.barber.name} está marcado para ${dateLabel} às ${minutesToLabel(state.time)}. Te esperamos!`;
+
+      goToStep(5);
+    }catch(e){
+      alert('Não foi possível salvar sua reserva agora. Tente novamente em instantes.');
+    }finally{
+      btn.disabled = false;
+      btn.textContent = 'Confirmar agendamento';
+    }
+  }
+
+  // ---------------- WIRE NAV BUTTONS ----------------
+  document.getElementById('toStep2').addEventListener('click', ()=> goToStep(2));
+  document.getElementById('toStep1').addEventListener('click', ()=> goToStep(1));
+  document.getElementById('toStep3').addEventListener('click', ()=>{ renderCalendar(); renderSlots(); goToStep(3); });
+  document.getElementById('toStep2b').addEventListener('click', ()=> goToStep(2));
+  document.getElementById('toStep4').addEventListener('click', ()=>{ renderSummary(); goToStep(4); });
+  document.getElementById('toStep3b').addEventListener('click', ()=> goToStep(3));
+  document.getElementById('confirmBooking').addEventListener('click', confirmBooking);
+  document.getElementById('newBooking').addEventListener('click', ()=>{
+    state.service=null; state.barber=null; state.date=null; state.time=null; state.calMonthOffset=0;
+    document.getElementById('custName').value='';
+    document.getElementById('custPhone').value='';
+    document.getElementById('toStep2').disabled = true;
+    document.getElementById('toStep3').disabled = true;
+    document.getElementById('toStep4').disabled = true;
+    renderServicePick();
+    renderBarberPick();
+    goToStep(1);
+  });
+
+  // ---------------- INIT ----------------
+  renderServiceList();
+  renderBarberGrid();
+  renderServicePick();
+  renderBarberPick();
+  renderCalendar();
+  goToStep(1);
+
+})();
+</script>
+
+</body>
+</html>
